@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clonar app com REA"
+  short_description: "Da referência a uma versão funcional, com poucas perguntas"
+  default_prompt: "Use $clonar-app para recriar este app. Me guie e pergunte apenas o necessário."
