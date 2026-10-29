@@ -1,6 +1,6 @@
 # Clonando apps com REA — roteiro de perguntas
 
-Copie os prompts para o seu agente de IA conectado ao REA. Troque os campos entre colchetes. Você não precisa conhecer os comandos internos da ferramenta.
+Copie os prompts para o seu agente de IA conectado ao REA. Troque os campos entre colchetes. Você não precisa conhecer os comandos internos da ferramenta. Os textos são pedidos ao agente: ele escolhe e chama as ferramentas do REA; não são comandos executáveis diretamente pelo REA.
 
 Use o prompt rápido ou siga a sequência guiada. Envie uma etapa por vez e aproveite a resposta anterior. Se a informação já estiver clara, pule a pergunta correspondente.
 
@@ -9,7 +9,7 @@ Use o prompt rápido ou siga a sequência guiada. Envie uma etapa por vez e apro
 ```text
 Use $clonar-app para investigar [APP: nome, link ou caminho] e me guiar na criação de uma versão própria de [FUNÇÕES DESEJADAS; se não souber, escreva “fluxo principal”].
 
-Comece pelo que o REA consegue analisar neste ambiente. Identifique a estrutura do app e escolha o menor fluxo completo que vale reproduzir primeiro. Separe descobertas comprovadas, hipóteses e partes ainda desconhecidas. Antes de implementar, apresente o fluxo e como vamos verificar se funciona.
+Identifique o tipo do alvo e use somente as ferramentas e os schemas disponíveis na versão conectada do REA. Comece pelo que conseguimos analisar neste ambiente. Identifique a estrutura do app e escolha o menor fluxo completo que vale reproduzir primeiro. Separe descobertas comprovadas, hipóteses e partes ainda desconhecidas. Antes de implementar, apresente o fluxo e como vamos verificar se funciona.
 
 Faça apenas as perguntas que mudam o resultado. Reaproveite evidências, consulte resumos e trechos, e guarde notas para retomarmos sem repetir a investigação.
 ```
@@ -21,7 +21,7 @@ Se a skill não estiver instalada, substitua `Use $clonar-app` por `Use o REA`. 
 ### 1. O que conseguimos investigar?
 
 ```text
-Quero criar uma versão própria de [APP: nome, link ou caminho]. Use o REA para identificar o que conseguimos analisar com o acesso e as ferramentas disponíveis. Comece por uma inspeção resumida. O que temos em mãos, quais são os limites e qual é o próximo passo útil?
+Quero criar uma versão própria de [APP: nome, link ou caminho]. Use o REA para identificar o que conseguimos analisar com o acesso e as ferramentas disponíveis. Identifique o tipo do alvo e use apenas ferramentas disponíveis para esse tipo e versão do REA. Comece por uma inspeção resumida. O que temos em mãos, quais são os limites e qual é o próximo passo útil?
 ```
 
 Resultado esperado: alvo identificado, capacidades disponíveis e bloqueios concretos. Evita começar por uma análise completa sem saber se o app é compatível.
@@ -45,7 +45,7 @@ Resultado esperado: uma primeira entrega com começo e fim. Um projeto maior pod
 ### 4. O que acontece quando uso essa função?
 
 ```text
-Investigue este fluxo: [EXEMPLO: criar um item, editar e salvar]. O que acontece entre a ação do usuário e o resultado? Use o REA onde houver suporte e relacione interface, funções, dados e chamadas externas. Reaproveite as evidências existentes. Separe observação, inferência e desconhecido; não atribua a REA resultados de outras ferramentas. Use um arquivo de teste descartável para alterações.
+Investigue este fluxo: [EXEMPLO: criar um item, editar e salvar]. O que acontece entre a ação do usuário e o resultado? Use o REA onde houver suporte e relacione interface, funções, dados e chamadas externas. Reaproveite as evidências existentes. Separe observação, inferência e desconhecido; não atribua a REA resultados de outras ferramentas. Análise estática não comprova execução: quando necessário e suportado, observe um cenário controlado em um arquivo de teste descartável.
 ```
 
 Resultado esperado: um caminho técnico ligado ao comportamento que queremos reproduzir. Um nome de função sozinho não comprova o funcionamento inteiro.
@@ -82,8 +82,25 @@ Use $clonar-app para investigar o Figma e planejar uma versão própria do fluxo
 
 - Diga qual app e qual resultado você quer; não precisa antecipar a arquitetura.
 - Prefira “investigue o fluxo X” a “analise tudo”.
-- Peça resumo com referências; deixe saídas grandes em arquivos locais.
+- Peça resumo com referências; deixe saídas grandes em arquivos locais. Resumo reduz a entrega, não necessariamente o trabalho de análise. Para JavaScript, selecione fontes relevantes quando souber quais arquivos respondem à pergunta.
 - Reaproveite as notas e faça a próxima pergunta sobre a dúvida que restou.
 - Se houver um bloqueio, peça uma alternativa suportada antes de repetir a chamada.
 
 Trabalhe com apps e materiais aos quais você tenha acesso autorizado. “Clonar”, neste roteiro, significa investigar uma referência e construir uma versão própria; o resultado e a fidelidade precisam ser demonstrados por testes.
+
+## Compatibilidade com a documentação do REA
+
+A sequência acompanha os workflows oficiais `investigate_feature`, `audit_residual_unknowns` e `verify_reconstruction`, quando anunciados pelo servidor. Esses workflows fornecem orientação; não executam análises sozinhos. A verificação de reconstrução exige uma especificação delimitada e evidências de comparação; não garante equivalência do app inteiro.
+
+A escolha das ferramentas depende do alvo. Por exemplo, JavaScript/Electron pode usar `analyze_javascript_application`, consultar Evidence com `inspect_analysis_view` e rastrear uma seed conhecida com `trace_application_feature`. Navegador aberto começa por descoberta de targets e exige uma conexão suportada; login pela extensão não garante acesso CDP pelo REA. Só use ferramentas anunciadas na versão conectada.
+
+O agente implementa a versão própria com suas ferramentas de desenvolvimento. O REA fornece análise e evidências; a documentação não promete gerar automaticamente um clone completo ou recuperar um backend remoto.
+
+Referências oficiais consultadas em 29/10/2026:
+
+- [Workflows guiados](https://github.com/morluto/rea/blob/main/docs/mcp-prompts.md).
+- [Instruções técnicas e roteamento de alvos](https://github.com/morluto/rea/blob/main/.agents/skills/reverse-engineer-anything/SKILL.md).
+- [Análise JavaScript e seleção de fontes](https://github.com/morluto/rea/blob/main/docs/javascript-artifact-reconstruction.md).
+- [Reutilização de Evidence e rastreamento](https://github.com/morluto/rea/blob/main/docs/javascript-application-workflows.md).
+
+A documentação de `main` pode descrever recursos posteriores à versão instalada. A disponibilidade real das ferramentas tem precedência sobre os exemplos deste guia.
