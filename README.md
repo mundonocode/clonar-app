@@ -18,6 +18,10 @@ Use $clonar-app para recriar o fluxo de cadastro deste app: [referência].
 
 A skill identifica o que falta, investiga a referência, implementa o escopo solicitado e compara os comportamentos observáveis. Não exige que o usuário saiba formular perguntas técnicas.
 
+## Roteiro para copiar
+
+Veja o [roteiro de perguntas para investigar e recriar apps](ROTEIRO.md): prompt rápido, sequência guiada e exemplo para a live.
+
 ## REA e requisitos
 
 Para investigar binários e pacotes, é necessário ter o [REA](https://github.com/morluto/rea) disponível no ambiente. Esta skill contém instruções; não instala nem configura o REA automaticamente. Sem REA, o agente continua com os materiais e ferramentas disponíveis e informa as limitações.
